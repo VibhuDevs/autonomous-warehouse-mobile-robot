@@ -1,0 +1,18 @@
+# ROS 2 colcon outputs
+/build/
+/install/
+/log/
+
+# Local editor and tooling state
+/.vscode/
+/.idea/
+*.swp
+*.swo
+
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# ROS and Gazebo runtime artifacts
+.ros/
+.gazebo/
