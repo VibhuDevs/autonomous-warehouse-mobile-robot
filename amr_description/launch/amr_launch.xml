@@ -1,0 +1,77 @@
+<launch>
+    <arg
+        name="start_slam"
+        default="false"
+        description="Start SLAM Toolbox for mapping." />
+    <arg
+        name="start_localization"
+        default="false"
+        description="Start AMCL separately; normally navigation.launch.py starts localization." />
+
+    <set_env
+        name="GZ_SIM_RESOURCE_PATH"
+        value="$(find-pkg-share amr_gazebo)/worlds"/>
+
+    <let
+        name="amr_urdf_path"
+        value="$(find-pkg-share amr_description)/urdf/amr.urdf.xacro" />
+
+    <let
+        name="bridge_config_path"
+        value="$(find-pkg-share amr_bringup)/config/amr_gazebo_bridge.yaml" />
+
+    <let
+        name="slam_config_path"
+        value="$(find-pkg-share amr_navigation)/config/slam_toolbox.yaml" />
+        
+    <let name="world"
+       value="$(find-pkg-share amr_gazebo)/worlds/warehouse_obstacles.sdf"/>
+
+    <node pkg="robot_state_publisher" exec="robot_state_publisher">
+    	<param name="use_sim_time" value="true"/>
+    	<param name="robot_description" value="$(command 'xacro $(var amr_urdf_path)')" />
+    </node>
+
+    <include
+        file="$(find-pkg-share ros_gz_sim)/launch/gz_sim.launch.py">
+        <arg
+            name="gz_args"
+            value="-r -v2 $(var world)" /> 
+        <arg 
+            name="on_exit_shutdown"
+            value="true"/>
+    </include>
+
+    <node
+        pkg="ros_gz_sim"
+        exec="create"
+        args="-topic robot_description -name amr_bot -x 0.0 -y -7.2 -z 0.15 -Y 1.5708"
+        output="screen" />
+
+    <node
+        pkg="ros_gz_bridge"
+        exec="parameter_bridge"
+        args="--ros-args -p config_file:=$(var bridge_config_path)"
+        output="screen" />
+
+    <node
+        pkg="controller_manager"
+        exec="spawner"
+        args="joint_state_broadcaster diff_drive_controller --controller-manager /controller_manager --controller-manager-timeout 60 --switch-timeout 60 --switch-asap"
+        output="screen" />
+
+    <include
+        file="$(find-pkg-share amr_navigation)/launch/localization.launch.py"
+        if="$(var start_localization)">
+        <arg name="use_sim_time" value="true"/>
+    </include>
+
+    <node
+    pkg="rviz2"
+    exec="rviz2"
+    args="-d $(find-pkg-share amr_description)/rviz/amr.rviz"
+    output="screen">
+    <param name="use_sim_time" value="true"/>
+    </node>
+    
+</launch>

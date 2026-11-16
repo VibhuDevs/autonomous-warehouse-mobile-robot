@@ -1,0 +1,68 @@
+amcl:
+  ros__parameters:
+  
+    use_sim_time: true
+    
+    do_beamskip: true
+    beam_skip_distance: 0.5
+    beam_skip_threshold: 0.3
+    beam_skip_error_threshold: 0.9
+    
+    recovery_alpha_fast: 0.1
+
+    # Frames
+    global_frame_id: map
+    odom_frame_id: odom
+    base_frame_id: base_link
+
+    # Laser
+    scan_topic: /scan
+
+    # Initial pose
+    set_initial_pose: true
+    initial_pose:
+      x: 8.58
+      y: -6.14
+      z: 0.0
+      yaw: -1.72
+
+    # Particle filter
+    min_particles: 500
+    max_particles: 2000
+
+    # Motion model
+    robot_model_type: "nav2_amcl::DifferentialMotionModel"
+
+    # Laser model
+    laser_model_type: "likelihood_field"
+
+    laser_max_range: 12.0
+    laser_min_range: 0.12
+
+    # Update thresholds
+    update_min_d: 0.2
+    update_min_a: 0.2
+
+    # Resampling
+    resample_interval: 1
+
+    # TF
+    transform_tolerance: 0.25
+
+    # Beam settings
+    max_beams: 60
+    
+    save_pose_rate: 0.5
+
+    # Noise parameters
+    alpha1: 0.2
+    alpha2: 0.2
+    alpha3: 0.2
+    alpha4: 0.2
+    alpha5: 0.2
+    
+    # Robot movement noise
+    odom_alpha1: 0.005
+    odom_alpha2: 0.005
+    odom_alpha3: 0.010
+    odom_alpha4: 0.005
