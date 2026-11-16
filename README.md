@@ -123,3 +123,4 @@ The robot must be localized in the `map` frame before sending a map-frame goal.
 
 See each package README for a file-by-file overview and package-specific
 commands.
+# autonomous-warehouse-mobile-robot
